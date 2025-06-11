@@ -1,0 +1,131 @@
+syntax = "proto3";
+package comunicacion;
+option go_package = "grpc-server/proto";
+
+service ComunicacionService {
+    
+    // funcionalidad para solicitar unirse a la cola
+    rpc QueuePlayer(PlayerInfoRequest) returns (QueuePlayerResponse);
+    // funcionalidad para consultar el estado actual del jugador
+    rpc GetPlayerStatus(PlayerStatusRequest) returns (PlayerStatusResponse);
+
+    // funcionalidad de matchmaker para iniciar una partida
+    rpc AssignMatch(AssignMatchRequest) returns (AssignMatchResponse);
+    // funcionalidad para informar cambios de estado del servidor
+    rpc UpdateServerStatus(ServerStatusUpdateRequest) returns (ServerStatusUpdateResponse);
+    
+    // funcionalidad para el Cliente Administrador. Devuelve el estado de todos los servidores y las colas de jugadores
+    rpc AdminGetSystemStatus(AdminRequest) returns (SystemStatusResponse);
+    // funcionalidad  Para el Cliente Administrador, para forzar el estado de un servidor (ej. marcar como DISPONIBLE o CAIDO).
+    rpc AdminUpdateServerState(AdminServerUpdateRequest) returns (AdminUpdateResponse);
+
+    // funcionalidad para verificar la salud de un servidor si no hay actualizaciones de estado recientes.
+    rpc PingServer(ServerId) returns (PingResponse);
+}
+
+// Mensajes para la funcionalidad de cola de jugadores
+message PlayerInfoRequest {
+    int32 player_id = 1; // ID del jugador que solicita unirse a la cola
+    string game_mode_preference = 2; // Preferencia de modo de juego del jugador
+    VectorClock vector_clock = 3;
+}
+message QueuePlayerResponse {
+    string message = 1; // Mensaje adicional, por ejemplo, si el jugador ya está en la cola
+    VectorClock vector_clock = 2; // Vector de reloj para la sincronización
+}
+
+
+// Mensajes para la funcionalidad de consulta del estado del jugador
+message PlayerStatusRequest {
+    int32 player_id = 1; // ID del jugador para consultar su estado
+}
+message PlayerStatusResponse {
+    string status = 1; // Estado del jugador, por ejemplo, "IDLE", "IN QUEUE", "IN MATCH"
+    int32 match_id = 4; // ID de la partida, si está en una
+    string match_server_address = 5; // Dirección del servidor de la partida, si está en una
+    VectorClock vector_clock = 6; // Vector de reloj para la sincronización
+}
+
+// Mensajes para la funcionalidad de asignación de partidas
+message AssignMatchRequest {
+    int32 match_id = 1; // ID del jugador que solicita una partida
+    repeated int32 players_ids = 2; // IDs de los jugadores asignados a la partida
+    VectorClock vector_clock = 3;   // Vector de reloj para la sincronización
+}
+message AssignMatchResponse {
+    string message = 1; // Mensaje adicional, por ejemplo, si la partida fue asignada correctamente
+    int32 match_id = 2; // ID de la partida asignada
+    repeated int32 players_ids = 3; // IDs de los jugadores asignados a la partida
+    string match_server_address = 4; // Dirección del servidor de la partida asignada
+    VectorClock vector_clock = 5;   // Vector de reloj para la sincronización        
+}
+
+
+// Mensajes para la funcionalidad de actualización del estado del servidor
+message ServerStatusUpdateRequest {
+    string server_id = 1; // Dirección del servidor que está enviando la actualización
+    string new_status = 2; // Estado del servidor, por ejemplo, "ONLINE", "OFFLINE", "MAINTENANCE"
+    string adress = 3; // Dirección del servidor, por ejemplo
+    VectorClock vector_clock = 4; // Vector de reloj para la sincronización
+}
+message ServerStatusUpdateResponse {
+    string status_code = 1; // Código de estado de la actualización, por ejemplo, "SUCCESS", "FAILURE"
+    VectorClock vector_clock = 2; // Vector de reloj para la sincronización
+}
+
+
+// Mensajes para la funcionalidad del Cliente Administrador
+message AdminRequest {
+    string admin_id = 1; // ID del administrador que solicita el estado del sistema
+}
+message ServerState {
+    string id = 1; // ID o dirección del servidor
+    string status = 2; // Estado del servidor, por ejemplo, "ONLINE", "OFFLINE"
+    string address = 3; // Dirección del servidor
+    int32 current_match_id = 4; // ID de la partida actual, si aplica
+}
+message PlayerQueueEntry {
+    int32 player_id = 1; // ID del jugador en la cola
+    string time_in_queue = 2; // Tiempo en cola (puede ser string o int64 para segundos)
+}
+// ∗ SystemStatusResponse: Debe contener listas de ServerState (id, status, address, current match id) y PlayerQueueEntry (player id, time in queue).
+message SystemStatusResponse {
+    repeated ServerState servers = 1; // Lista de estados de los servidores
+    repeated PlayerQueueEntry player_queue = 2; // Lista de jugadores en cola
+    VectorClock vector_clock = 3; // Vector de reloj para la sincronización
+}
+
+// Mensajes para la actualización del estado del servidor por parte del Cliente Administrador
+message AdminServerUpdateRequest {
+    string server_id = 1; // ID del servidor a actualizar
+    string new_forced_status = 2; // Nuevo estado del servidor, por ejemplo, "DISPONIBLE", "CAIDO"
+}
+message AdminUpdateResponse {
+    string status_code = 1; // Código de estado de la actualización, por ejemplo, "SUCCESS", "FAILURE"
+    string message = 2; // Mensaje adicional, por ejemplo, "Servidor actualizado correctamente"
+}
+
+
+// Mensajes para la verificación de salud del servidor
+message ServerId {
+    string server_id = 1; // ID o dirección del servidor a verificar
+}
+message PingResponse {
+    string status = 1; // Estado del servidor, por ejemplo, "ONLINE", "OFFLINE"
+    string message = 2; // Mensaje adicional, por ejemplo, "Servidor activo"
+}
+
+
+message VectorClock {
+    map<string, int32> clocks = 1; // Ej: {"Player1": 1, "Matchmaker": 3, "GameServer1": 2}
+}
+
+// Entidades ---------------------------
+
+// jugador
+message Jugador {
+    int32 id = 1; // ID del jugador
+    string name = 2; // Nombre del jugador
+    string game_mode_preference = 3; // Preferencia de modo de juego del jugador
+    string status = 4; // Estado del jugador, por ejemplo, "IDLE", "IN QUEUE", "IN MATCH"
+}
