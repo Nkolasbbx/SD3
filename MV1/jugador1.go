@@ -1,7 +1,6 @@
 package main
 
 import (
-	// cambia esto según tu estructura real
 	"bufio"
 	"context"
 	"fmt"
