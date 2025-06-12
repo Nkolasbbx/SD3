@@ -38,9 +38,7 @@ message QueuePlayerResponse {
 // Mensajes para la funcionalidad de consulta del estado del jugador
 message PlayerStatusRequest {
     int32 player_id = 1; // ID del jugador para consultar su estado
-    VectorClock vector_clock = 2; // Vector de reloj para la sincronización
 }
-
 message PlayerStatusResponse {
     string status = 1; // Estado del jugador, por ejemplo, "IDLE", "IN QUEUE", "IN MATCH"
     int32 match_id = 4; // ID de la partida, si está en una

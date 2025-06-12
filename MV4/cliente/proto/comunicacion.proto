@@ -38,9 +38,7 @@ message QueuePlayerResponse {
 // Mensajes para la funcionalidad de consulta del estado del jugador
 message PlayerStatusRequest {
     int32 player_id = 1; // ID del jugador para consultar su estado
-    VectorClock vector_clock = 2; // Vector de reloj para la sincronización
 }
-
 message PlayerStatusResponse {
     string status = 1; // Estado del jugador, por ejemplo, "IDLE", "IN QUEUE", "IN MATCH"
     int32 match_id = 4; // ID de la partida, si está en una
@@ -50,7 +48,7 @@ message PlayerStatusResponse {
 
 // Mensajes para la funcionalidad de asignación de partidas
 message AssignMatchRequest {
-    int32 match_id = 1; // ID único de la partida asignada
+    int32 match_id = 1; // ID del jugador que solicita una partida
     repeated int32 players_ids = 2; // IDs de los jugadores asignados a la partida
     VectorClock vector_clock = 3;   // Vector de reloj para la sincronización
 }
@@ -67,7 +65,7 @@ message AssignMatchResponse {
 message ServerStatusUpdateRequest {
     string server_id = 1; // Dirección del servidor que está enviando la actualización
     string new_status = 2; // Estado del servidor, por ejemplo, "ONLINE", "OFFLINE", "MAINTENANCE"
-    string address = 3; // Dirección del servidor, por ejemplo
+    string adress = 3; // Dirección del servidor, por ejemplo
     VectorClock vector_clock = 4; // Vector de reloj para la sincronización
 }
 message ServerStatusUpdateResponse {

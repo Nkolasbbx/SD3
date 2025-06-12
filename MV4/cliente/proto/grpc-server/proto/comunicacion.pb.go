@@ -389,7 +389,7 @@ type ServerStatusUpdateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ServerId      string                 `protobuf:"bytes,1,opt,name=server_id,json=serverId,proto3" json:"server_id,omitempty"`          // Dirección del servidor que está enviando la actualización
 	NewStatus     string                 `protobuf:"bytes,2,opt,name=new_status,json=newStatus,proto3" json:"new_status,omitempty"`       // Estado del servidor, por ejemplo, "ONLINE", "OFFLINE", "MAINTENANCE"
-	Address       string                 `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`                            // Dirección del servidor, por ejemplo
+	Adress        string                 `protobuf:"bytes,3,opt,name=adress,proto3" json:"adress,omitempty"`                              // Dirección del servidor, por ejemplo
 	VectorClock   *VectorClock           `protobuf:"bytes,4,opt,name=vector_clock,json=vectorClock,proto3" json:"vector_clock,omitempty"` // Vector de reloj para la sincronización
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -439,9 +439,9 @@ func (x *ServerStatusUpdateRequest) GetNewStatus() string {
 	return ""
 }
 
-func (x *ServerStatusUpdateRequest) GetAddress() string {
+func (x *ServerStatusUpdateRequest) GetAdress() string {
 	if x != nil {
-		return x.Address
+		return x.Adress
 	}
 	return ""
 }
@@ -1076,12 +1076,12 @@ const file_comunicacion_proto_rawDesc = "" +
 	"\vplayers_ids\x18\x03 \x03(\x05R\n" +
 	"playersIds\x120\n" +
 	"\x14match_server_address\x18\x04 \x01(\tR\x12matchServerAddress\x12<\n" +
-	"\fvector_clock\x18\x05 \x01(\v2\x19.comunicacion.VectorClockR\vvectorClock\"\xaf\x01\n" +
+	"\fvector_clock\x18\x05 \x01(\v2\x19.comunicacion.VectorClockR\vvectorClock\"\xad\x01\n" +
 	"\x19ServerStatusUpdateRequest\x12\x1b\n" +
 	"\tserver_id\x18\x01 \x01(\tR\bserverId\x12\x1d\n" +
 	"\n" +
-	"new_status\x18\x02 \x01(\tR\tnewStatus\x12\x18\n" +
-	"\aaddress\x18\x03 \x01(\tR\aaddress\x12<\n" +
+	"new_status\x18\x02 \x01(\tR\tnewStatus\x12\x16\n" +
+	"\x06adress\x18\x03 \x01(\tR\x06adress\x12<\n" +
 	"\fvector_clock\x18\x04 \x01(\v2\x19.comunicacion.VectorClockR\vvectorClock\"{\n" +
 	"\x1aServerStatusUpdateResponse\x12\x1f\n" +
 	"\vstatus_code\x18\x01 \x01(\tR\n" +

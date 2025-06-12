@@ -250,7 +250,7 @@ func (x *PlayerStatusResponse) GetVectorClock() *VectorClock {
 // Mensajes para la funcionalidad de asignación de partidas
 type AssignMatchRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MatchId       int32                  `protobuf:"varint,1,opt,name=match_id,json=matchId,proto3" json:"match_id,omitempty"`                 // ID del jugador que solicita una partida
+	MatchId       int32                  `protobuf:"varint,1,opt,name=match_id,json=matchId,proto3" json:"match_id,omitempty"`                 // ID único de la partida asignada
 	PlayersIds    []int32                `protobuf:"varint,2,rep,packed,name=players_ids,json=playersIds,proto3" json:"players_ids,omitempty"` // IDs de los jugadores asignados a la partida
 	VectorClock   *VectorClock           `protobuf:"bytes,3,opt,name=vector_clock,json=vectorClock,proto3" json:"vector_clock,omitempty"`      // Vector de reloj para la sincronización
 	unknownFields protoimpl.UnknownFields
