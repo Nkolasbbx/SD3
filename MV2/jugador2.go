@@ -1,7 +1,7 @@
 package main
 
 import (
-	"MV2/proto/grpc-server/proto" // ajusta la ruta según tu estructura real
+	"MV2/proto/grpc-server/proto"
 	"bufio"
 	"context"
 	"fmt"
